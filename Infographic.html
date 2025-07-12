@@ -6,6 +6,7 @@
     <title>Enterprise Quantum Resistance Migration Plan</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@1.4.0"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
@@ -42,8 +43,8 @@
             max-width: 600px;
             margin-left: auto;
             margin-right: auto;
-            height: 300px;
-            max-height: 400px;
+            height: 500px;
+            max-height: 600px;
         }
         @media (min-width: 768px) {
             .chart-container {
@@ -52,7 +53,7 @@
         }
     </style>
 </head>
-<body class="text-gray-800">
+<body>
 
     <header class="bg-brand-dark-blue text-white p-8 md:p-12 text-center">
         <h1 class="text-4xl md:text-6xl font-black text-brand-aqua mb-4">The Quantum Countdown Has Begun</h1>
@@ -64,13 +65,13 @@
         <section id="threat" class="text-center my-12 md:my-20">
              <h2 class="text-3xl font-bold text-brand-dark-blue mb-4">The Threat is Real and Imminent</h2>
              <p class="max-w-3xl mx-auto text-lg text-gray-600 mb-8">Quantum computers will soon be powerful enough to break the encryption that protects our most sensitive data. This isn't a distant problem; the timeline is shrinking, and the risk of "Harvest Now, Decrypt Later" attacks is already here.</p>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                <div class="bg-white rounded-lg shadow-xl p-8 border-t-8 border-brand-red">
+            <div class="flex flex-col items-center gap-8">
+                <div class="bg-white rounded-lg shadow-xl p-8 border-t-8 border-brand-red w-full max-w-md mx-auto">
                     <p class="text-7xl md:text-9xl font-black text-brand-red">2029</p>
                     <p class="text-xl font-semibold mt-2">The Year Gartner Predicts Current Crypto Becomes Vulnerable</p>
-                    <p class="mt-4 text-gray-600">This is the critical window. Data encrypted today with a lifespan beyond 2029 is at immediate risk of being harvested by adversaries for future decryption.</p>
+                    <p class="mt-4 text-gray-600">This is the critical window. Data encrypted today with a lifespan beyond 2029 is at immediate risk of being harvested by adversaries for future decryption. (Source: Gartner)</p>
                 </div>
-                <div class="chart-container h-[300px] md:h-[400px]">
+                <div class="chart-container w-full max-w-4xl h-[300px] md:h-[400px]">
                     <canvas id="threatTimelineChart"></canvas>
                 </div>
             </div>
@@ -85,17 +86,17 @@
                 <div class="bg-white rounded-lg shadow-lg p-6 text-center border-t-4 border-brand-blue">
                     <p class="text-2xl font-bold text-brand-blue mb-2">ML-KEM</p>
                     <p class="font-semibold">(FIPS 203)</p>
-                    <p class="mt-3 text-gray-600">The primary standard for general-purpose encryption, replacing methods like RSA and ECC for key exchange.</p>
+                    <p class="mt-3 text-gray-600">The primary standard for general-purpose encryption, replacing methods like RSA and ECC for key exchange. (Source: NIST)</p>
                 </div>
                 <div class="bg-white rounded-lg shadow-lg p-6 text-center border-t-4 border-brand-teal">
                     <p class="text-2xl font-bold text-brand-teal mb-2">ML-DSA</p>
                     <p class="font-semibold">(FIPS 204)</p>
-                    <p class="mt-3 text-gray-600">The primary standard for digital signatures, ensuring data integrity and authenticity in a post-quantum world.</p>
+                    <p class="mt-3 text-gray-600">The primary standard for digital signatures, ensuring data integrity and authenticity in a post-quantum world. (Source: NIST)</p>
                 </div>
                 <div class="bg-white rounded-lg shadow-lg p-6 text-center border-t-4 border-brand-orange">
                     <p class="text-2xl font-bold text-brand-orange mb-2">SLH-DSA</p>
                     <p class="font-semibold">(FIPS 205)</p>
-                    <p class="mt-3 text-gray-600">A backup digital signature standard based on a different mathematical approach for enhanced security diversity.</p>
+                    <p class="mt-3 text-gray-600">A backup digital signature standard based on a different mathematical approach for enhanced security diversity. (Source: NIST)</p>
                 </div>
             </div>
         </section>
@@ -135,12 +136,19 @@
         <section id="decision" class="my-12 md:my-20">
             <h2 class="text-3xl font-bold text-center text-brand-dark-blue mb-4">The Decision: Cost of Action vs. Inaction</h2>
             <p class="max-w-3xl mx-auto text-lg text-center text-gray-600 mb-12">The choice is clear. Proactive migration involves manageable costs and positions us as a secure, forward-thinking leader. Inaction, however, invites catastrophic risk with far greater long-term costs.</p>
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
                 <div class="bg-white p-6 rounded-lg shadow-lg">
                     <h3 class="text-xl font-bold text-brand-rust mb-4 text-center">The Unacceptable Cost of Inaction</h3>
-                     <div class="chart-container h-[400px]">
-                        <canvas id="inactionRisksChart"></canvas>
-                    </div>
+                    <ul class="space-y-3 text-left list-disc list-inside text-gray-700">
+                        <li><strong class="font-semibold">Catastrophic Security Vulnerability:</strong> All sensitive data, communications, and systems vulnerable to "harvest now, decrypt later" attacks.</li>
+                        <li><strong class="font-semibold">Severe Reputational Damage:</strong> Loss of customer trust and irreparable brand damage from breaches.</li>
+                        <li><strong class="font-semibold">Significant Financial Penalties & Legal Liabilities:</strong> Costly regulatory fines and lawsuits.</li>
+                        <li><strong class="font-semibold">Loss of Competitive Advantage:</strong> Lagging behind secure competitors.</li>
+                        <li><strong class="font-semibold">Compliance Failure:</strong> Inability to operate in certain markets or with key partners due to non-compliance.</li>
+                        <li><strong class="font-semibold">More Complex and Costly Reactive Remediation:</strong> Forced, chaotic, and expensive recovery after a breach.</li>
+                        <li><strong class="font-semibold">Increased Operational Disruption:</strong> Unplanned outages and business interruptions.</li>
+                        <li><strong class="font-semibold">Talent Scarcity and Higher Costs:</strong> Difficulty and expense in finding PQC expertise under duress.</li>
+                    </ul>
                     <p class="mt-4 text-sm text-center text-gray-600">Failure to act leads to vulnerabilities that can cause irreversible damage to our data, reputation, and finances.</p>
                 </div>
                 <div class="bg-white p-6 rounded-lg shadow-lg">
@@ -163,7 +171,7 @@
                             <p class="text-gray-700"><strong class="font-semibold">Managed Transition:</strong> Avoid the chaos and extreme expense of a forced, reactive migration.</p>
                         </li>
                     </ul>
-                    <div class="chart-container h-[240px] mt-6">
+                    <div class="chart-container h-[540px] mt-6">
                         <canvas id="migrationStatusChart"></canvas>
                     </div>
                     <p class="mt-2 text-sm text-center text-gray-600">The entire platform tenancy requires migration, a process we must begin now.</p>
@@ -186,7 +194,7 @@
             let currentLine = words[0];
 
             for (let i = 1; i < words.length; i++) {
-                if (currentLine.length + words[i].length + 1 < maxWidth) {
+                if ((currentLine + ' ' + words[i]).length < maxWidth) {
                     currentLine += ' ' + words[i];
                 } else {
                     lines.push(currentLine);
@@ -203,11 +211,12 @@
                     callbacks: {
                         title: function(tooltipItems) {
                             const item = tooltipItems[0];
-                            let label = item.chart.data.labels[item.dataIndex];
-                            if (Array.isArray(label)) {
-                              return label.join(' ');
-                            }
-                            return label;
+                            // For scatter plot, the label is in the raw data description
+                            return item.raw.description; 
+                        },
+                        label: function(context) {
+                            const dataPoint = context.raw;
+                            return `Year: ${Math.floor(dataPoint.x)}`;
                         }
                     }
                 }
@@ -215,95 +224,125 @@
         };
 
         const threatTimelineCtx = document.getElementById('threatTimelineChart').getContext('2d');
-        new Chart(threatTimelineCtx, {
-            type: 'line',
-            data: {
-                labels: ['Today', '2026', '2029', '2030', '2034', '2035'],
-                datasets: [{
-                    label: 'Cryptographic Risk Level',
-                    data: [10, 30, 80, 90, 100, 100],
-                    borderColor: '#ae2012',
-                    backgroundColor: 'rgba(174, 32, 18, 0.2)',
-                    fill: true,
-                    tension: 0.4
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false },
-                    title: {
-                        display: true,
-                        text: 'Projected Quantum Threat Trajectory',
-                        font: { size: 16 },
-                        color: '#334155'
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        max: 100,
-                        ticks: {
-                            callback: function(value) {
-                                return value + '%'
-                            }
-                        }
-                    },
-                    x: {
-                        grid: { display: false }
-                    }
-                }
-            }
-        });
+        
+        const milestones = [
+            { x: 2054.67, y: 'NIST Milestones', description: 'NIST: First PQC Standards Finalized', color: '#005f73', pointStyle: 'rectRot' }, // Aug 2024
+            { x: 2025, y: 'NSA Guidance', description: 'NSA: Quantum-Safe Algorithms Preferred', color: '#0a9396', pointStyle: 'star' }, // By 2025
+            { x: 2025.25, y: 'NIST Milestones', description: 'NIST: HQC Algorithm Selected', color: '#005f73', pointStyle: 'rectRot' }, // Mar 2025
+            { x: 2029, y:  'Gartner Predictions', description: 'Gartner: Current Crypto Vulnerable', color: '#ee9b00', pointStyle: 'triangle' }, // By 2029
+            { x: 2030, y: 'NIST Milestones', description: 'NIST: 112-bit Algorithms Deprecated', color: '#005f73', pointStyle: 'rectRot' }, // By 2030
+            { x: 2034, y: 'Gartner Predictions', description: 'Gartner: Fully Breakable', color: '#ee9b00', pointStyle: 'triangle' }, // By 2034
+            { x: 2035, y: 'NIST Milestones', description: 'NIST: All Traditional Crypto Disallowed', color: '#005f73', pointStyle: 'rectRot' } // By 2035
+        ];
 
-        const inactionRisksCtx = document.getElementById('inactionRisksChart').getContext('2d');
-        const inactionLabels = ['Catastrophic Security Vulnerability', 'Severe Reputational Damage', 'Significant Financial Penalties', 'Loss of Competitive Advantage', 'Compliance Failure'];
-        const wrappedInactionLabels = inactionLabels.map(label => wrapLabel(label, 16));
-        new Chart(inactionRisksCtx, {
-            type: 'bar',
+        const datasets = [
+            {
+                label: 'NIST Milestones',
+                data: milestones.filter(m => m.y === 'NIST Milestones'),
+                backgroundColor: '#005f73', // Brand blue for NIST
+                pointStyle: 'rectRot', // Rotated rectangle
+                radius: 5,
+            },
+            {
+                label: 'Gartner Predictions',
+                data: milestones.filter(m => m.y === 'Gartner Predictions'),
+                backgroundColor: '#ee9b00', // Brand yellow for Gartner
+                pointStyle: 'triangle', // Triangle
+                radius: 5,
+            },
+            {
+                label: 'NSA Guidance',
+                data: milestones.filter(m => m.y === 'NSA Guidance'),
+                backgroundColor: '#0a9396', // Brand teal for NSA
+                pointStyle: 'star', // Star
+                radius: 5,
+            }
+        ];
+
+        const annotations = milestones.map((m) => ({
+            type: 'label',
+            xValue: m.x,
+            yValue: m.y,
+            content: wrapLabel(m.description, 16),
+            font: {
+                size: 10,
+                weight: 'bold',
+                color: m.color
+            },
+            backgroundColor: 'rgba(255, 255, 255, 0.8)',
+            borderColor: m.color,
+            borderWidth: 1,
+            borderRadius: 4,
+            xAdjust: 0,
+            yAdjust: -35 , // m.y === 'NSA Guidance' ? -30 : 30, // 👈 NSA label is raised
+            callout: {
+                display: true,
+                borderColor: m.color,
+                borderWidth: 1,
+                margin: 5
+            }
+        }));
+
+        new Chart(threatTimelineCtx, {
+            type: 'scatter', 
             data: {
-                labels: wrappedInactionLabels,
-                datasets: [{
-                    label: 'Severity of Risk',
-                    data: [95, 90, 80, 75, 85],
-                    backgroundColor: [
-                        '#9b2226',
-                        '#ae2012',
-                        '#bb3e03',
-                        '#ca6702',
-                        '#ee9b00'
-                    ],
-                    borderColor: 'rgba(255, 255, 255, 0)',
-                    borderWidth: 1
-                }]
+                datasets: datasets
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                indexAxis: 'y',
                 ...sharedTooltipConfig,
                 plugins: {
-                    legend: { display: false },
+                    legend: {
+                        display: true,
+                        position: 'bottom',
+                        labels: {
+                            usePointStyle: true,
+                            boxWidth: 8,
+                            boxHeight: 8,
+                            color: '#334155'
+                        }
+                    },
                     title: {
                         display: true,
-                        text: 'Severity of Risks from Inaction',
+                        text: 'Key Quantum Threat Timelines (Sources: Gartner, NIST, NSA)',
                         font: { size: 16 },
                         color: '#334155'
+                    },
+                    annotation: { 
+                        annotations: annotations
                     }
                 },
                 scales: {
                     x: {
-                        beginAtZero: true,
-                        max: 100,
-                         ticks: {
+                        type: 'linear', 
+                        min: 2024, 
+                        max: 2036, 
+                        ticks: {
+                            stepSize: 1,
                             callback: function(value) {
-                                return value + '%'
-                            }
+                                return Math.floor(value); 
+                            },
+                            color: '#334155'
+                        },
+                        title: {
+                            display: true,
+                            text: 'Year',
+                            color: '#334155'
+                        },
+                        grid: {
+                            color: '#e2e8f0' 
                         }
                     },
                     y: {
-                        grid: { display: false }
+                        type: 'category', 
+                        labels: ['\u100B', 'NIST Milestones', 'Gartner Predictions', 'NSA Guidance'],
+                        offset: false,
+                        position: 'left',
+                        grid: { display: false },
+                        ticks: {
+                            color: '#334155'
+                        }
                     }
                 }
             }
