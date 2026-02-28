@@ -1,0 +1,49 @@
+sequenceDiagram
+    autonumber
+    participant Client
+    participant Server
+
+    Note over Client,Server: --- TLS 1.3 Handshake Start ---
+    
+    rect rgb(180, 220, 255)
+    Note right of Client: ClientHello contains:<br/>✓ Classical groups: x25519, secp256r1<br/>✓ PQ groups: kyber1024, saber
+    Client->>Server: ClientHello
+    end
+    
+    rect rgb(180, 220, 255)
+    Note left of Server: ServerHello selects:<br/>✓ Classical: x25519<br/>✓ PQ: kyber1024
+    Server->>Client: ServerHello + ServerKeyShare
+    Note left of Server: Contains ECDHE + PQ Public Key
+    end
+    
+    rect rgb(180, 220, 255)
+    Note right of Client: ClientKeyShare contains:<br/>✓ ECDHE Public Key<br/>✓ PQ Ciphertext (encapsulates shared secret)
+    Client->>Server: ClientKeyShare
+    end
+    
+    rect rgb(180, 220, 255)
+    Note left of Server: Server derives:<br/>✓ K_ECDHE from ECDHE shared secret<br/>✓ K_PQ by decapsulating ciphertext
+    Server->>Client: ServerKeyShareAck
+    end
+    
+    rect rgb(150, 200, 150)
+    Note over Client,Server: --- Session Key Derivation ---<br/>✓ K_session = HKDF(K_ECDHE || K_PQ)<br/>✓ Hybrid approach: Both classical & PQ
+    end
+    
+    rect rgb(240, 240, 240)
+    Server->>Client: Certificate
+    Note left of Server: RSA/ECDSA Certificate<br/>(Classical authentication only)
+    
+    Server->>Client: CertificateVerify
+    Note left of Server: Signature verification<br/>(Classical, not PQ-signed)
+    end
+    
+    rect rgb(240, 240, 240)
+    Server->>Client: Finished
+    Note left of Server: HMAC using derived session key<br/>(Protects handshake transcript)
+    
+    Client->>Server: Finished
+    Note right of Client: HMAC using derived session key<br/>(Protects handshake transcript)
+    end
+    
+    Note over Client,Server: --- TLS 1.3 Handshake Complete ---<br/>✓ Encrypted Application Data can now flow<br/>✓ Security provided by hybrid (ECDHE + PQ) key derivation

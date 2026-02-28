@@ -1,0 +1,88 @@
+sequenceDiagram
+    autonumber
+    participant Client_PQ as "Client (Hybrid PQ)"
+    participant Server_PQ as "Server (Hybrid PQ)"
+    participant Client as "Client (Classical)"
+    participant Server as "Server (Classical)"
+
+    Note over Client_PQ,Server_PQ: --- Hybrid TLS 1.3 Handshake (PQ + Classical) ---
+    Note over Client,Server: --- Classical TLS 1.3 Handshake (No PQ) ---
+
+    %% ClientHello
+    rect rgb(180, 220, 255)
+    Note right of Client_PQ: ClientHello contains:<br/>✓ Classical groups: x25519, secp256r1<br/>✓ PQ groups: kyber1024, saber
+    Client_PQ->>Server_PQ: ClientHello
+    end
+    rect rgb(220, 220, 255)
+    Note right of Client: ClientHello contains:<br/>✓ Classical groups: x25519, secp256r1<br/>✓ No PQ groups
+    Client->>Server: ClientHello
+    end
+
+    %% ServerHello
+    rect rgb(180, 220, 255)
+    Note left of Server_PQ: ServerHello selects:<br/>✓ Classical: x25519<br/>✓ PQ: kyber1024
+    Server_PQ->>Client_PQ: ServerHello + ServerKeyShare
+    Note left of Server_PQ: Contains ECDHE + PQ Public Key
+    end
+    rect rgb(220, 220, 255)
+    Note left of Server: ServerHello selects:<br/>✓ Classical: x25519
+    Server->>Client: ServerHello + ServerKeyShare
+    Note left of Server: Contains ECDHE Public Key
+    end
+
+    %% ClientKeyShare
+    rect rgb(180, 220, 255)
+    Note right of Client_PQ: ClientKeyShare contains:<br/>✓ ECDHE Public Key<br/>✓ PQ Ciphertext (encapsulates shared secret)
+    Client_PQ->>Server_PQ: ClientKeyShare
+    end
+    rect rgb(220, 220, 255)
+    Note right of Client: ClientKeyShare contains:<br/>✓ ECDHE Public Key
+    Client->>Server: ClientKeyShare
+    end
+
+    %% ServerKeyShareAck
+    rect rgb(180, 220, 255)
+    Note left of Server_PQ: Server derives:<br/>✓ K_ECDHE from ECDHE shared secret<br/>✓ K_PQ by decapsulating ciphertext
+    Server_PQ->>Client_PQ: ServerKeyShareAck
+    end
+    rect rgb(220, 220, 255)
+    Note left of Server: Server derives:<br/>✓ K_ECDHE from ECDHE shared secret
+    Server->>Client: ServerKeyShareAck
+    end
+
+    %% Session Key Derivation
+    rect rgb(150, 200, 150)
+    Note over Client_PQ,Server_PQ: --- Session Key Derivation ---<br/>✓ K_session = HKDF(K_ECDHE || K_PQ)<br/>✓ Hybrid approach: Both classical & PQ
+    end
+    rect rgb(180, 220, 180)
+    Note over Client,Server: --- Session Key Derivation ---<br/>✓ K_session = HKDF(K_ECDHE)<br/>✓ Classical ECDHE only
+    end
+
+    %% Certificate
+    rect rgb(240, 240, 240)
+    Server_PQ->>Client_PQ: Certificate
+    Note left of Server_PQ: RSA/ECDSA Certificate<br/>(Classical authentication only)
+    Server->>Client: Certificate
+    Note left of Server: RSA/ECDSA Certificate<br/>(Classical authentication only)
+    
+    Server_PQ->>Client_PQ: CertificateVerify
+    Note left of Server_PQ: Signature verification<br/>(Classical, not PQ-signed)
+    Server->>Client: CertificateVerify
+    Note left of Server: Signature verification<br/>(Classical, not PQ-signed)
+    end
+
+    %% Finished
+    rect rgb(240, 240, 240)
+    Server_PQ->>Client_PQ: Finished
+    Note left of Server_PQ: HMAC using derived session key<br/>(Protects handshake transcript)
+    Server->>Client: Finished
+    Note left of Server: HMAC using derived session key<br/>(Protects handshake transcript)
+    
+    Client_PQ->>Server_PQ: Finished
+    Note right of Client_PQ: HMAC using derived session key<br/>(Protects handshake transcript)
+    Client->>Server: Finished
+    Note right of Client: HMAC using derived session key<br/>(Protects handshake transcript)
+    end
+
+    Note over Client_PQ,Server_PQ: --- Hybrid TLS 1.3 Handshake Complete ---<br/>✓ Encrypted Application Data can now flow<br/>✓ Security provided by hybrid (ECDHE + PQ) key derivation
+    Note over Client,Server: --- Classical TLS 1.3 Handshake Complete ---<br/>✓ Encrypted Application Data can now flow<br/>✓ Security provided by classical ECDHE key derivation
