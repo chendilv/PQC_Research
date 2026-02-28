@@ -29,6 +29,18 @@ Perfect Forward Secrecy (PFS) is a security property of cryptographic protocols 
 - Session keys are derived from this secret and ephemeral keys are discarded.
 - Compromise of the server’s private key does not affect past sessions.
 
+## Role of Certificate Algorithms (RSA, ECDSA) in TLS
+
+In modern TLS (1.2 with PFS, 1.3), the algorithm used in the server's certificate (such as RSA or ECDSA) is primarily for authentication:
+
+- The certificate's private key is used to digitally sign handshake messages, proving the server's identity to the client.
+- If the certificate uses RSA, the RSA key signs handshake data (and in older TLS, could be used for key exchange, but this does not provide PFS).
+- If the certificate uses ECDSA, the ECDSA key signs handshake data.
+- The actual key exchange, which establishes the session keys and provides PFS, uses ephemeral algorithms (DHE/ECDHE) that are not tied to the certificate's key.
+- The certificate's algorithm is not used to encrypt session data or perform key exchange in modern TLS with PFS.
+
+This separation ensures that even if the server's long-term private key is compromised, past session keys remain secure due to the use of ephemeral key exchange methods.
+
 ---
 
 ## Sequence Diagram: RSA vs DHE Key Exchange and PFS
