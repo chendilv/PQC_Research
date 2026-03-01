@@ -1,0 +1,32 @@
+%% TLS 1.2 handshake using RSA key exchange (no PFS)
+sequenceDiagram
+    participant Client as Client
+    participant Server as Server
+    participant CA as Certificate Authority
+
+    Note over Client,Server: TLS 1.2 — RSA key exchange (no Perfect Forward Secrecy)
+
+    Client->>Server: ClientHello (version, random, cipher_suites)
+    Server->>Client: ServerHello (version, random, chosen_cipher)
+    Server->>Client: Certificate (server cert containing RSA public key)
+    Note right of Client: Validate certificate chain (CA)
+    Server->>Client: ServerHelloDone
+
+    Note over Client: Generate PreMasterSecret (PMS)
+    Client->>Server: ClientKeyExchange (PMS encrypted with server's RSA public key)
+    Note right of Server: Decrypt PMS with server RSA private key
+
+    Note over Client,Server: Derive Master Secret and session keys from PMS
+
+    Client->>Server: ChangeCipherSpec
+    Client->>Server: Finished (encrypted with new keys)
+    Server->>Client: ChangeCipherSpec
+    Server->>Client: Finished (encrypted with new keys)
+
+    Note over Client,Server: Application data can now be exchanged encrypted
+
+    %% Optional: client auth (not used by default)
+    %% alt Client certificate requested
+    %%     Server->>Client: CertificateRequest
+    %%     Client->>Server: Certificate (client cert)
+    %% end
